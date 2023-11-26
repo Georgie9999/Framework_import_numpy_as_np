@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{name}}</title>
+    <title>{{lastname}}</title>
+</head>
+<body>
+{% if score > 80 %}
+I'm happy to inform you that you did very well on today's {{ test_name }}.
+{% else %}
+I'm sorry to inform you that you did not do so well on today's {{ test_name }}.
+{% endif %}
+</body>
+</html>
