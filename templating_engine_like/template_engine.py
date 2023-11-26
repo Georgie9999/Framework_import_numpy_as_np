@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 class TemplateEngine:
     def __init__(self):
         self.template = ""
+        self.parameters = {}
 
     def set_template_from_html(self, file_name: str):
         with open(file_name, 'r') as f:
@@ -13,7 +14,7 @@ class TemplateEngine:
         self.template = str_template
 
     def set_parameters(self, **kwargs):
-        pass
+        self.parameters = kwargs
 
     def get_rendered(self):
         pass
