@@ -16,15 +16,22 @@ def parse_http(response):
 
     headers = {}
 
-    for line in response_headers.split('\r\n'):
-        if line:
-            header, body = line.split(": ", maxsplit=1)
-            headers[header] = body
+    line_number = 0
+    response_headers = response_headers.split('\r\n')
+    while response_headers[line_number]:
+        header, body = response_headers[line_number].split(": ", maxsplit=1)
+        headers[header] = body
+        line_number += 1
 
     response_parsed["headers"] = headers
 
-    response_parsed["body"] = ""
-    if response_headers.split('\r\n')[-2]:
-        _, response_parsed["body"] = response_headers[-2].split(": ")
+    line_number += 1
+
+    body = ""
+    while response_headers[line_number]:
+        body += response_headers[line_number]
+        line_number += 1
+
+    response_parsed["body"] = body
 
     return response_parsed
