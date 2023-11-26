@@ -146,4 +146,8 @@ async def rand_func_2():
 async def get_user(username, user2):
     return f"Getting user: {username} {user2}"
 
+@app.get('/')
+async def main():
+    return render("templates/template1.html", params)
+
 app.run()
