@@ -12,19 +12,19 @@ class BestApi:
         return inner_get
     
     def put(self, path):
-        def inner_get(func):
+        def inner_put(func):
             self.put_dict[path] = func
 
-        return inner_get
+        return inner_put
     
     def post(self, path):
-        def inner_get(func):
+        def inner_post(func):
             self.post_dict[path] = func
 
-        return inner_get
+        return inner_post
     
     def delete(self, path):
-        def inner_get(func):
+        def inner_delete(func):
             self.delete_dict[path] = func
 
-        return inner_get
+        return inner_delete
