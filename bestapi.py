@@ -1,7 +1,6 @@
 import asyncio
 import re
 
-from http_parser import parse_http
 from parser.HttpParser import HTTPParser
 
 
