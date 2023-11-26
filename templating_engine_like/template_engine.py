@@ -19,6 +19,7 @@ class TemplateEngine:
         self.parameters = kwargs
 
     def get_rendered(self):
+        self.if_dealing()
         self.for_dealing()
         self.replace_substitutions()
         return self.template
