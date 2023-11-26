@@ -104,7 +104,7 @@ class BestApi:
 
         for pattern_part, path_part in zip(pattern_parts, path_parts):
             if '{' in pattern_part and '}' in pattern_part:
-                continue  # Ignore placeholders
+                continue
             if pattern_part != path_part:
                 return False
 
@@ -120,7 +120,7 @@ class BestApi:
         params = {}
         for pattern_part, path_part in zip(pattern_parts, path_parts):
             if '{' in pattern_part and '}' in pattern_part:
-                param_name = pattern_part[1:-1]  # Extract parameter name from {param}
+                param_name = pattern_part[1:-1]
                 params[param_name] = path_part
 
         return params if params else None
