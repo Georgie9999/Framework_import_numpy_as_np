@@ -18,14 +18,13 @@ class TemplateEngine:
         self.parameters = kwargs
 
     def get_rendered(self):
-        pass
+        self.replace_substitutions()
+        return self.template
 
     def replace_substitutions(self):
         for key in self.parameters:
             sub_str = "{{" + f"{key}" + "}}"
             self.template = re.sub(sub_str, self.parameters[key], self.template, count=0)
-
-        return self.template
 
     def if_dealing(self):
         pass
