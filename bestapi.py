@@ -1,4 +1,5 @@
 import asyncio
+import re
 
 from http_parser import parse_http
 from parser.HttpParser import HTTPParser
@@ -67,35 +68,63 @@ class BestApi:
         parser = HTTPParser(request_data.decode())
         parsed = parser.get_parsed_data()
 
-        body = ""
-
-        if parsed["method"] == "GET":
-            body = await self.__handle_method(parsed["path"], self.get_dict)
-
-        elif parsed["method"] == "POST":
-            body = await self.__handle_method(parsed["path"], self.post_dict)
-
-        elif parsed["method"] == "PUT":
-            body = await self.__handle_method(parsed["path"], self.put_dict)
-
-        elif parsed["method"] == "DELETE":
-            body = await self.__handle_method(parsed["path"], self.delete_dict)
+        body = await self.__handle_method(parsed["method"], parsed["path"])
 
         response = f"HTTP/1.1 {200}\r\nContent-Length: {len(body)}\r\n\r\n{body}\r\n\r\n"
         writer.write(response.encode())
 
         await writer.drain()
 
-    async def __handle_method(self, path, method_dict):
-        part = path
-        if "{" in path:
-            part = path[0:path.find("{")]
+    async def __handle_method(self, method, path):
+        method_dict = {}
 
-        for key in method_dict.keys():
-            if part in key:
-                return await method_dict[key]()
+        if method == "GET":
+            method_dict = self.get_dict
+        elif method == "POST":
+            method_dict = self.post_dict
+        elif method == "PUT":
+            method_dict = self.put_dict
+        elif method == "DELETE":
+            method_dict = self.delete_dict
+
+        for key, handler in method_dict.items():
+            if self.__path_matches(key, path):
+                params = self.__extract_path_parameters(key, path)
+                if params is not None:
+                    return await handler(**params)
 
         return "Not Found"
+
+    def __path_matches(self, pattern, path):
+        pattern_parts = pattern.split('/')
+        path_parts = path.split('/')
+
+        if len(pattern_parts) != len(path_parts):
+            return False
+
+        for pattern_part, path_part in zip(pattern_parts, path_parts):
+            if '{' in pattern_part and '}' in pattern_part:
+                continue  # Ignore placeholders
+            if pattern_part != path_part:
+                return False
+
+        return True
+
+    def __extract_path_parameters(self, pattern, path):
+        pattern_parts = pattern.split('/')
+        path_parts = path.split('/')
+
+        if len(pattern_parts) != len(path_parts):
+            return None
+
+        params = {}
+        for pattern_part, path_part in zip(pattern_parts, path_parts):
+            if '{' in pattern_part and '}' in pattern_part:
+                param_name = pattern_part[1:-1]  # Extract parameter name from {param}
+                params[param_name] = path_part
+
+        return params if params else None
+
 
 app = BestApi()
 
@@ -112,5 +141,9 @@ async def rand_func():
 @app.delete('/hello')
 async def rand_func_2():
     return "delete hello"
+
+@app.get('/user/{username}/hi/{user2}')
+async def get_user(username, user2):
+    return f"Getting user: {username} {user2}"
 
 app.run()
