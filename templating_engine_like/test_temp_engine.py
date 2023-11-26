@@ -9,6 +9,7 @@ if __name__ == '__main__':
     print(final)
     print(temp.template)
     print(temp.parameters)
+    temp.if_dealing()
 
     temp2 = template_engine.TemplateEngine()
 
