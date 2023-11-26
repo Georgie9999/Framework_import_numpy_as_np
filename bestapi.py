@@ -148,12 +148,12 @@ async def rand_func_2():
 async def get_user(username, user2):
     return f"{username} say hi to {user2}"
 
-@app.get('/template')
-async def main():
+@app.get('/template/{name}')
+async def main(name):
     temp = te.TemplateEngine()
 
     temp.set_template_from_html('templates/second_html.html')
-    temp.set_parameters(test_name="mem", students=["Ivan", "Masha", "Nikolay"], score="1")
+    temp.set_parameters(test_name=name, students=["Ivan", "Masha", "Nikolay"], score="1")
     final = temp.get_rendered()
     print(final)
     return final
