@@ -3,6 +3,8 @@ import re
 
 from parser.HttpParser import HTTPParser
 
+import templating_engine_like.template_engine as te
+
 
 class BestApi:
     def __init__(self):
@@ -69,7 +71,7 @@ class BestApi:
 
         body = await self.__handle_method(parsed["method"], parsed["path"])
 
-        response = f"HTTP/1.1 {200}\r\nContent-Length: {len(body)}\r\n\r\n{body}\r\n\r\n"
+        response = f"HTTP/1.1 {200}\r\nContent-Length: {len(body)}\r\nContent-Type: text/html; charset=utf-8\r\n\r\n{body}\r\n\r\n"
         writer.write(response.encode())
 
         await writer.drain()
@@ -87,6 +89,8 @@ class BestApi:
             method_dict = self.delete_dict
 
         for key, handler in method_dict.items():
+            if path == key:
+                return await handler()
             if self.__path_matches(key, path):
                 params = self.__extract_path_parameters(key, path)
                 if params is not None:
@@ -132,7 +136,6 @@ app = BestApi()
 async def hi_rand_func():
     return 'hi'
 
-
 @app.get('/hello')
 async def rand_func():
     return 'hello'
@@ -143,6 +146,16 @@ async def rand_func_2():
 
 @app.get('/user/{username}/hi/{user2}')
 async def get_user(username, user2):
-    return f"Getting user: {username} {user2}"
+    return f"{username} say hi to {user2}"
+
+@app.get('/template')
+async def main():
+    temp = te.TemplateEngine()
+
+    temp.set_template_from_html('templates/first_html.html')
+    temp.set_parameters(="mem", lastname="cringe")
+    final = temp.get_rendered()
+    print(final)
+    return final
 
 app.run()
