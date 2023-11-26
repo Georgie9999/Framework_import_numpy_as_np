@@ -27,8 +27,8 @@ class TemplateEngine:
         for key in self.parameters:
             sub_str1 = "{{" + f"{key}" + "}}"
             sub_str2 = "{" + f"{key}" + "}"
-            self.template = re.sub(sub_str1, self.parameters[key], self.template, count=0)
-            self.template = re.sub(sub_str2, self.parameters[key], self.template, count=0)
+            self.template = re.sub(sub_str1, str(self.parameters[key]), self.template, count=0)
+            self.template = re.sub(sub_str2, str(self.parameters[key]), self.template, count=0)
 
     def if_dealing(self):
         pass
