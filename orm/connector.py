@@ -11,7 +11,9 @@ class DBConnector:
     def __init__(self) -> None:
         self._connection = sqlite3.connect("some_database.db")
 
-    def fetch(self, query):
-        cursor = self._connection.cursor()
-        cursor.execute(query)
-        return cursor.fetchall()
+    def _get_cursor(self):
+        return self._connection.cursor()
+
+    def execute_query(self, query, params=None):
+        cursor = self._get_cursor()
+        cursor.execute(query, params)
