@@ -152,8 +152,8 @@ async def get_user(username, user2):
 async def main():
     temp = te.TemplateEngine()
 
-    temp.set_template_from_html('templates/first_html.html')
-    temp.set_parameters(="mem", lastname="cringe")
+    temp.set_template_from_html('templates/second_html.html')
+    temp.set_parameters(test_name="mem", students=["Ivan", "Masha", "Nikolay"], score="1")
     final = temp.get_rendered()
     print(final)
     return final
