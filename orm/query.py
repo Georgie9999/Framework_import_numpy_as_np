@@ -66,7 +66,7 @@ class From(BaseStatement):
         self._params.extend(*args)
 
     def line(self) -> str:
-        separator = ","
+        separator = ", "
         return separator.join(self._params)
     
     def __bool__(self) -> bool:
@@ -109,7 +109,8 @@ class Query:
     
     def _lines(self):
         for _, value in self._data.items():
-            yield value.definition()
+            if value:
+                yield value.definition()
 
     def __str__(self) -> str:
         return "".join(self._lines())
@@ -117,5 +118,5 @@ class Query:
 
 if __name__ == "__main__":
     q = Query()
-    query = q.SELECT("row").FROM("table").WHERE(id=1, user="q", op_type=OR)
+    query = q.SELECT("row").FROM("table", "another_table").WHERE(id=1, user="q", op_type=OR)
     print(query)
