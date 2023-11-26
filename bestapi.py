@@ -5,17 +5,17 @@ from parser.HttpParser import HTTPParser
 
 
 class BestApi:
-    def __init__(self):
+    def __init__(self, port=1337):
         self.get_dict = {}
         self.post_dict = {}
         self.put_dict = {}
         self.delete_dict = {}
-
+        self.port = port
         self.loop = asyncio.get_event_loop()
 
         self.server = self.loop.run_until_complete(
             asyncio.start_server(
-                self.__route, port=1337
+                self.__route, port=self.port
             )
         )
 
@@ -49,7 +49,6 @@ class BestApi:
     async def __route(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
         request_data = b""
 
-        print(self.get_dict)
 
         while True:
             data = await asyncio.wait_for(
@@ -124,25 +123,25 @@ class BestApi:
 
         return params if params else None
 
-
-app = BestApi()
-
-
-@app.get('/hi')
-async def hi_rand_func():
-    return 'hi'
+if __name__ == "__main__":
+    app = BestApi()
 
 
-@app.get('/hello')
-async def rand_func():
-    return 'hello'
+    @app.get('/hi')
+    async def hi_rand_func():
+        return 'hi'
 
-@app.delete('/hello')
-async def rand_func_2():
-    return "delete hello"
 
-@app.get('/user/{username}/hi/{user2}')
-async def get_user(username, user2):
-    return f"Getting user: {username} {user2}"
+    @app.get('/hello')
+    async def rand_func():
+        return 'hello'
 
-app.run()
+    @app.delete('/hello')
+    async def rand_func_2():
+        return "delete hello"
+
+    @app.get('/user/{username}/hi/{user2}')
+    async def get_user(username, user2):
+        return f"Getting user: {username} {user2}"
+
+    app.run()
