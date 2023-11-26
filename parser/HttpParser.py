@@ -10,7 +10,6 @@ class HTTPParser:
     def parse_request(self):
         lines = self.raw.splitlines()
 
-        # Парсинг первой строки запроса (метод, путь, версия HTTP)
         match = re.match(r'(\w+) (\S+) (\S+)', lines[0])
         if match:
             method, path, version = match.groups()
@@ -26,11 +25,8 @@ class HTTPParser:
                 headers[key] = value
             self.parsed_data['headers'] = headers
 
-            # Парсинг тела запроса (если есть)
             if '' in lines:
-                # Ищем индекс пустой строки, который указывает на начало тела запроса
                 body_start = lines.index('')
-                # Индекс следующей строки после пустой строки - это начало тела запроса
                 body = '\r\n'.join(lines[body_start + 1:])
                 self.parsed_data['body'] = body
             else:
