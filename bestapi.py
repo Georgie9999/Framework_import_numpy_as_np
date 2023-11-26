@@ -1,7 +1,4 @@
-from asyncio import Queue
 import asyncio
-
-import requests
 
 
 class BestApi:
@@ -18,7 +15,7 @@ class BestApi:
                 self.__route, port=1337
             )
         )
-    
+
     def run(self):
         self.loop.run_forever()
 
@@ -33,13 +30,13 @@ class BestApi:
             self.put_dict[path] = func
 
         return inner_put
-    
+
     def post(self, path: str):
         def inner_post(func):
             self.post_dict[path] = func
 
         return inner_post
-    
+
     def delete(self, path: str):
         def inner_delete(func):
             self.delete_dict[path] = func
@@ -51,9 +48,9 @@ class BestApi:
             data = await asyncio.wait_for(
                 reader.readline(), timeout=10
             )
-            
-            # response = f"HTTP/1.1 {200}\r\nContent-Length: {len('da')}\r\n\r\n{'da'}"
-            # writer.write(response.encode())
+
+            response = f"HTTP/1.1 {200}\r\nContent-Length: {len('da')}\r\n\r\n{'da'}"
+            writer.write(response.encode())
             # # if data is not None:
             # #     raw_response = await self.get_dict['/hello']()
 
