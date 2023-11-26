@@ -2,8 +2,8 @@ from typing import Any
 from abc import abstractmethod
 
 
-AND = "and"
-OR = "or"
+AND = "AND"
+OR = "OR"
 
 
 class Q:
@@ -14,7 +14,7 @@ class Q:
 
     def __str__(self) -> str:
         kv_pairs = [f"{k} = {v}" for k, v in self._params.items()]
-        return f" {self.separator}".join(kv_pairs)
+        return f" {self.separator} ".join(kv_pairs)
     
     def __bool__(self) -> bool:
         return bool(self._params)
@@ -88,3 +88,34 @@ class Where(BaseStatement):
     
     def __bool__(self) -> bool:
         return bool(self._q)
+    
+
+class Query:
+
+    def __init__(self) -> None:
+        self._data = {"select": Select(), "from": From(), "where": Where()}
+
+    def SELECT(self, *args):
+        self._data["select"].add(args)
+        return self
+
+    def FROM(self, *args):
+        self._data["from"].add(args)
+        return self
+
+    def WHERE(self, op_type: str = AND, **kwargs):
+        self._data["where"].add(op_type, **kwargs)
+        return self
+    
+    def _lines(self):
+        for _, value in self._data.items():
+            yield value.definition()
+
+    def __str__(self) -> str:
+        return "".join(self._lines())
+    
+
+if __name__ == "__main__":
+    q = Query()
+    query = q.SELECT("row").FROM("table").WHERE(id=1, user="q", op_type=OR)
+    print(query)
