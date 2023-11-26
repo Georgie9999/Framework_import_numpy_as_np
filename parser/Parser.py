@@ -13,10 +13,12 @@ class Parser:
         result = urlparse(url_path)
         return result
 
-temp = Parser()
-result = temp.parse_path('/all/{temp}/{temp2}')
-print(result)
 
-res2 = temp.parser_url('http://www.cwi.nl/%7Eguido/Python.html')
-print(res2)
+if __name__ == '__main__':
+    temp = Parser()
+    result = temp.parse_path('/all/{temp}/{temp2}')
+    print(result)
+
+    res2 = temp.parser_url('https://mail.yandex.ru/?uid=1130000034756201#message/184647584722197413')
+    print(res2)
 
