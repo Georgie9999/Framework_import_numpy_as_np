@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import re
 
 
 class TemplateEngine:
@@ -20,7 +21,11 @@ class TemplateEngine:
         pass
 
     def replace_substitutions(self):
-        pass
+        for key in self.parameters:
+            sub_str = "{{" + f"{key}" + "}}"
+            self.template = re.sub(sub_str, self.parameters[key], self.template, count=0)
+
+        return self.template
 
     def if_dealing(self):
         pass
