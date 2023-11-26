@@ -51,9 +51,11 @@ class BestApi:
             data = await asyncio.wait_for(
                 reader.readline(), timeout=10
             )
-            print(data)
-            # if data is not None:
-            #     raw_response = await self.get_dict['/hello']()
+            
+            # response = f"HTTP/1.1 {200}\r\nContent-Length: {len('da')}\r\n\r\n{'da'}"
+            # writer.write(response.encode())
+            # # if data is not None:
+            # #     raw_response = await self.get_dict['/hello']()
 
 app = BestApi()
 
