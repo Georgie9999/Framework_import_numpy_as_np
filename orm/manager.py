@@ -15,9 +15,20 @@ class Manager:
         self.query = self.query.WHERE(*args, **kwargs)
         return self
     
+    def update(self, new_data):
+        fields = new_data.keys()
+        placeholder_format = ', '.join([f'{field_name} = %s' for field_name in fields])
+        query = f"UPDATE {self.model._model_name} SET {placeholder_format}"
+        params = list(new_data.values())
+        self._connector.execute_query(query, params)
+
+    def delete(self):
+        query = f"DELETE FROM {self.model_class.table_name} "
+        self._connector.execute_query(query)
+    
     def fetch(self):
         query = str(self.query)
-        db_response = self._connector.fetch(query)
+        db_response = self._connector.execute_query(query).fetch_all()
         result = []
         for row in db_response:
             model = self.model()
